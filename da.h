@@ -17,4 +17,7 @@ extern int sizeDA(DA *items);
 extern void displayDA(DA *items, FILE *fp);
 extern int debugDA(DA *items, int level);
 extern void freeDA(DA *items);
+
+#define insertDAback(items, value) insertDA(items, sizeDA(items), value)
+#define removeDAback(items) removeDA(items, sizeDA(items) - 1)
 #endif
