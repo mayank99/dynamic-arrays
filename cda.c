@@ -88,10 +88,19 @@ void insertCDA(CDA *items, int index, void *value) {
 void *removeCDA(CDA *items, int index) {
   assert(items->size > 0);
   void *value = getCDA(items, index);
-  for (int i = index; i < items->size - 1; i++) {
-    setElement(items, i, getCDA(items, i + 1));
+
+  if (index < items->size / 2) {
+    for (int i = index; i > 0; i--) {
+      setElement(items, i, getCDA(items, i - 1));
+    }
+    items->start = (items->start + 1) % items->capacity;
+  } else {
+    for (int i = index; i < items->size - 1; i++) {
+      setElement(items, i, getCDA(items, i + 1));
+    }
   }
   items->size -= 1;
+
   if (items->size < 0.25 * items->capacity) {
     resize(items, 0.5);
   }
