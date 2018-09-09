@@ -1,0 +1,13 @@
+INTEGER test of DA, simple
+items: [[1]]
+items: [4,3,2,1,[0]]
+items: [4,2,1,[1]]
+items: [4,2,[2]]
+items: [2,[3]]
+items: [[1]]
+items: [4,3,2,1]
+items: [4,2,1]
+items: [4,2]
+items: [2]
+items: []
+size: 0
