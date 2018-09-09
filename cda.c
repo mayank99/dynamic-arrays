@@ -73,13 +73,14 @@ void insertCDA(CDA *items, int index, void *value) {
       for (int i = 0; i < index; i++) {
         setElement(items, i - 1, getCDA(items, i));
       }
-      items->start = (items->start - index + items->capacity) % items->capacity;
+      setElement(items, index - 1, value);
+      items->start = (items->start - 1 + items->capacity) % items->capacity;
     } else {
       for (int i = items->size; i > index; i--) {
         setElement(items, i, getCDA(items, i - 1));
       }
+      setElement(items, index, value);
     }
-    setElement(items, index, value);
   }
   items->size += 1;
 }
