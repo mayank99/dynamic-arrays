@@ -24,9 +24,7 @@ CDA *newCDA() {
   return items;
 }
 
-void setCDAdisplay(CDA *items, void (*d)(void *, FILE *)) {
-  items->display = d;
-}
+void setCDAdisplay(CDA *items, void (*d)(void *, FILE *)) { items->display = d; }
 
 void setCDAfree(CDA *items, void (*f)(void *)) { items->release = f; }
 
@@ -34,9 +32,7 @@ void resize(CDA *items, double factor) {
   int capacity = factor == 2 ? items->capacity * 2 : items->capacity / 2;
   if (capacity == 0) capacity = 1;
   void **temp = malloc(capacity * sizeof(void *));
-  for (int i = 0; i < items->size; i++) {
-    temp[i] = getCDA(items, i);
-  }
+  for (int i = 0; i < items->size; i++) temp[i] = getCDA(items, i);
   free(items->store);
   items->store = temp;
   items->start = 0;
@@ -51,34 +47,23 @@ void *setElement(CDA *items, int index, void *value) {
 }
 
 void insertCDA(CDA *items, int index, void *value) {
+  // housekeeping / memory allocation
   assert(index >= 0 && index <= items->size);
-  if (items->store == 0) {
-    items->store = malloc(sizeof(value));
-    items->start = 0;
-  }
-  if (items->size == items->capacity) {
-    resize(items, 2);
-  }
+  if (items->size == items->capacity) resize(items, 2);
   assert(items->store != 0);
 
-  // if fewer items to the left then shift them all to left, otherwise right
+  // shifting and inserting
   if (index == 0) {
-    int start = 0;
-    if (items->size != 0)
-      start = (items->start - 1 + items->capacity) % items->capacity;
+    int start = (items->size == 0) ? 0 : (items->start - 1 + items->capacity) % items->capacity;
     items->store[start] = value;
     items->start = start;
   } else {
     if (index < items->size / 2) {
-      for (int i = 0; i < index; i++) {
-        setElement(items, i - 1, getCDA(items, i));
-      }
+      for (int i = 0; i < index; i++) setElement(items, i - 1, getCDA(items, i));
       setElement(items, index - 1, value);
       items->start = (items->start - 1 + items->capacity) % items->capacity;
     } else {
-      for (int i = items->size; i > index; i--) {
-        setElement(items, i, getCDA(items, i - 1));
-      }
+      for (int i = items->size; i > index; i--) setElement(items, i, getCDA(items, i - 1));
       setElement(items, index, value);
     }
   }
@@ -89,21 +74,16 @@ void *removeCDA(CDA *items, int index) {
   assert(items->size > 0);
   void *value = getCDA(items, index);
 
+  // shifting elements
   if (index < items->size / 2) {
-    for (int i = index; i > 0; i--) {
-      setElement(items, i, getCDA(items, i - 1));
-    }
+    for (int i = index; i > 0; i--) setElement(items, i, getCDA(items, i - 1));
     items->start = (items->start + 1) % items->capacity;
   } else {
-    for (int i = index; i < items->size - 1; i++) {
-      setElement(items, i, getCDA(items, i + 1));
-    }
+    for (int i = index; i < items->size - 1; i++) setElement(items, i, getCDA(items, i + 1));
   }
   items->size -= 1;
 
-  if (items->size < 0.25 * items->capacity) {
-    resize(items, 0.5);
-  }
+  if (items->size < 0.25 * items->capacity) resize(items, 0.5);
   return value;
 }
 
@@ -120,13 +100,12 @@ void *getCDA(CDA *items, int index) {
 
 void *setCDA(CDA *items, int index, void *value) {
   assert(index >= -1 && index <= items->size);
-  if (index == -1) {
+  if (index == -1)
     insertCDAfront(items, value);
-  } else if (index == items->size) {
+  else if (index == items->size)
     insertCDAback(items, value);
-  } else {
+  else
     return setElement(items, index, value);
-  }
   return 0;
 }
 
@@ -135,11 +114,11 @@ int sizeCDA(CDA *items) { return items->size; }
 void displayCDA(CDA *items, FILE *fp) {
   fprintf(fp, "(");
   for (int i = 0; i < items->size; i++) {
-    if (items->display != 0) {
+    if (items->display != 0)
       items->display(getCDA(items, i), fp);
-    } else {
+    else
       fprintf(fp, "@%p", getCDA(items, i));
-    }
+
     if (i != items->size - 1) fprintf(fp, ",");
   }
   if (items->debug > 0) {
