@@ -18,7 +18,7 @@ DA *newDA() {
   items->debug = 0;
   items->size = 0;
   items->capacity = 1;
-  items->store = 0;
+  items->store = malloc(sizeof(void *));
   return items;
 }
 
@@ -26,28 +26,15 @@ void setDAdisplay(DA *items, void (*d)(void *, FILE *)) { items->display = d; }
 
 void setDAfree(DA *items, void (*f)(void *)) { items->release = f; }
 
-// void resize(DA *items, int capacity) {
-//   items->store = realloc(items->store, capacity);
-//   // for (int i = 0; i < items->size; i++) {
-//   //   temp[i] = items->store[i];
-//   // }
-//   // free(items->store);
-//   // items->store = temp;
-// }
-
 void insertDA(DA *items, int index, void *value) {
   assert(index >= 0 && index <= items->size);
-  if (items->store == 0) {
-    items->store = malloc(sizeof(value));
-  }
   if (items->size == items->capacity) {
     items->capacity *= 2;
     items->store = realloc(items->store, items->capacity * sizeof(value));
   }
   assert(items->store != 0);
-  for (int i = items->size; i > index; i--) {
-    items->store[i] = items->store[i - 1];
-  }
+
+  for (int i = items->size; i > index; i--) items->store[i] = items->store[i - 1];
   items->store[index] = value;
   items->size += 1;
 }
@@ -55,10 +42,9 @@ void insertDA(DA *items, int index, void *value) {
 void *removeDA(DA *items, int index) {
   assert(items->size > 0);
   void *value = items->store[index];
-  for (int i = index; i < items->size - 1; i++) {
-    items->store[i] = items->store[i + 1];
-  }
+  for (int i = index; i < items->size - 1; i++) items->store[i] = items->store[i + 1];
   items->size -= 1;
+  
   if (items->size < 0.25 * items->capacity) {
     items->capacity = items->size == 0 ? 1 : items->capacity / 2;
     items->store = realloc(items->store, items->capacity * sizeof(value));
