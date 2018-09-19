@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <limits.h>
 #include <assert.h>
+#include <string.h>
 #include "string.h"
 
 struct STRING
@@ -38,13 +39,13 @@ displaySTRING(void *v,FILE *fp)
     fprintf(fp,"%s",getSTRING((STRING *) v));
     }
 
-/*
-char * 
+
+int 
 compareSTRING(void *v,void *w)
     {
-    return getSTRING(v) - getSTRING(w);
+    return strcmp(v, w);
     }
-*/
+
 
 void
 freeSTRING(void *v)

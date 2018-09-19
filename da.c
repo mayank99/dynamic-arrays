@@ -44,7 +44,7 @@ void *removeDA(DA *items, int index) {
   void *value = items->store[index];
   for (int i = index; i < items->size - 1; i++) items->store[i] = items->store[i + 1];
   items->size -= 1;
-  
+
   if (items->size < 0.25 * items->capacity) {
     items->capacity = items->size == 0 ? 1 : items->capacity / 2;
     items->store = realloc(items->store, items->capacity * sizeof(value));
@@ -53,9 +53,15 @@ void *removeDA(DA *items, int index) {
 }
 
 void unionDA(DA *recipient, DA *donor) {
-  for (int i = sizeDA(donor); i > 0; i++) {
+  for (int i = sizeDA(donor); i > 0; i--) {
     insertDA(recipient, sizeDA(recipient), removeDA(donor, 0));
   }
+  // for (int i = 0; i < sizeDA(donor); i++) {
+  //   insertDA(recipient, sizeDA(recipient), getDA(donor, i));
+  // }
+  // // free(donor->store);
+  // // free(donor);
+  // // donor = newDA();
 }
 
 void *getDA(DA *items, int index) {

@@ -2,3 +2,10 @@
 !*/
 !*.*
 *.o
+testing
+.vscode
+cda-*
+da-*
+stack-*
+queue-*
+*.txt

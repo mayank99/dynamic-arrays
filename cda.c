@@ -30,7 +30,7 @@ void setCDAfree(CDA *items, void (*f)(void *)) { items->release = f; }
 
 void resize(CDA *items, double factor) {
   int capacity = factor == 2 ? items->capacity * 2 : items->capacity / 2;
-  if (capacity == 0) capacity = 1;
+  if (capacity == 0 || factor == 0) capacity = 1;
   void **temp = malloc(capacity * sizeof(void *));
   for (int i = 0; i < items->size; i++) temp[i] = getCDA(items, i);
   free(items->store);
@@ -83,12 +83,12 @@ void *removeCDA(CDA *items, int index) {
   }
   items->size -= 1;
 
-  if (items->size < 0.25 * items->capacity) resize(items, 0.5);
+  if (items->size < 0.25 * items->capacity) resize(items, items->size != 0 ? 0.5: 0);
   return value;
 }
 
 void unionCDA(CDA *recipient, CDA *donor) {
-  for (int i = sizeCDA(donor); i > 0; i++) {
+  for (int i = sizeCDA(donor); i > 0; i--) {
     insertCDA(recipient, sizeCDA(recipient), removeCDA(donor, 0));
   }
 }

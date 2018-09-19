@@ -4,7 +4,7 @@
 #include <assert.h>
 #include "real.h"
 
-struct REAL
+struct real
     {
     double value;
     };
@@ -13,7 +13,7 @@ REAL *
 newREAL(double x)
     {
     REAL *p = malloc(sizeof(REAL));
-    assert(p != 0);
+    if (p == 0) { fprintf(stderr,"out of memory\n"); exit(1); }
     p->value = x;
     return p;
     }
@@ -33,11 +33,11 @@ setREAL(REAL *v,double x)
     }
 
 void 
-displayREAL(void *v,FILE *fp)
+displayREAL(void *v, FILE *fp)
     {
-    fprintf(fp,"%g",getREAL((REAL *) v));
+    fprintf(fp,"%f",getREAL(v));
     }
-
+    
 double 
 compareREAL(void *v,void *w)
     {

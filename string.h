@@ -8,7 +8,7 @@ typedef struct STRING STRING;
 extern STRING *newSTRING(char *);
 extern char *getSTRING(STRING *);
 extern char *setSTRING(STRING *, char *);
-// extern char *compareSTRING(void *,void *);
+extern int compareSTRING(void *,void *);
 extern void displaySTRING(void *,FILE *);
 extern void freeSTRING(void *);
 

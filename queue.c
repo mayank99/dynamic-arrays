@@ -33,14 +33,15 @@ void *dequeue(QUEUE *items) { return removeCDAfront(items->array); }
 
 void *peekQUEUE(QUEUE *items) {
   assert(sizeCDA(items->array) > 0);
-  return getCDA(items->array, sizeCDA(items->array) - 1);
+  return getCDA(items->array, 0);
 }
 
 void displayQUEUE(QUEUE *items, FILE *fp) {
   if (items->debug == 0) {
     fprintf(fp, "<");
     for (int i = 0; i < sizeCDA(items->array); i++) {
-      items->display(getCDA(items->array, i), fp);
+      if (items->display) items->display(getCDA(items->array, i), fp);
+      else fprintf(fp, "@%p",getCDA(items->array, i));
       if (i != sizeCDA(items->array) - 1) fprintf(fp, ",");
     }
     fprintf(fp, ">");
