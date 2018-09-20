@@ -88,9 +88,12 @@ void *removeCDA(CDA *items, int index) {
 }
 
 void unionCDA(CDA *recipient, CDA *donor) {
-  for (int i = sizeCDA(donor); i > 0; i--) {
-    insertCDA(recipient, sizeCDA(recipient), removeCDA(donor, 0));
+  for (int i = 0; i < sizeCDA(donor); i++) {
+    insertCDA(recipient, sizeCDA(recipient), getCDA(donor, i));
   }
+  donor->store = realloc(donor->store, sizeof(void *));
+  donor->size = 0;
+  donor->capacity = 1;
 }
 
 void *getCDA(CDA *items, int index) {

@@ -53,15 +53,12 @@ void *removeDA(DA *items, int index) {
 }
 
 void unionDA(DA *recipient, DA *donor) {
-  for (int i = sizeDA(donor); i > 0; i--) {
-    insertDA(recipient, sizeDA(recipient), removeDA(donor, 0));
+  for (int i = 0; i < sizeDA(donor); i++) {
+    insertDA(recipient, sizeDA(recipient), getDA(donor, i));
   }
-  // for (int i = 0; i < sizeDA(donor); i++) {
-  //   insertDA(recipient, sizeDA(recipient), getDA(donor, i));
-  // }
-  // // free(donor->store);
-  // // free(donor);
-  // // donor = newDA();
+  donor->store = realloc(donor->store, sizeof(void *));
+  donor->size = 0;
+  donor->capacity = 1;
 }
 
 void *getDA(DA *items, int index) {
