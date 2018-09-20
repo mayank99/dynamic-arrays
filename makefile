@@ -34,20 +34,21 @@ real.o : real.c real.h
 string.o : string.c string.h
 	gcc $(OOPTS) string.c
 
-$(TESTS): %: $(TESTDIR)%.c
+$(TESTS): %: $(TESTDIR)%.c all
 	gcc $(LOPTS) -o $(TESTDIR)$@ $< $(OBJS) $(MAIN)
 
 test : all $(TESTS)
 	for x in $(TESTS); do \
-		echo -------; echo $$x.expected; echo -------; cat $(TESTDIR)$$x.expected; \
+		echo; echo -------; echo $$x.expected; echo -------; cat $(TESTDIR)$$x.expected; \
 		./$(TESTDIR)$$x > $(TESTDIR)$$x.yours; \
 		echo -------; echo $$x.yours; echo -------; cat $(TESTDIR)$$x.yours; echo -------; \
-		cmp --silent $(TESTDIR)$$x.expected $(TESTDIR)$$x.yours && echo "PASSED" || echo "FAILED"; echo -------; echo; \
+		cmp --silent $(TESTDIR)$$x.expected $(TESTDIR)$$x.yours && echo "PASSED" || echo "FAILED"; echo -------; \
 	done
 
 valgrind: all $(TESTS)
 	for x in $(TESTS); do \
-		echo -------; echo $$x; echo -------; valgrind $(TESTDIR)$$x; echo; \
+		valgrind --log-file=$(TESTDIR)$$x.valgrind $(TESTDIR)$$x; \
+		echo; echo -------; echo $$x.valgrind; echo -------;  cat $(TESTDIR)$$x.valgrind; echo; \
 	done
 
 clean :
